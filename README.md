@@ -14,9 +14,10 @@ Features:
 - Automatic backup of corrupted database files
 - No additional Python node files or dependencies required
 
-To-Do:
+```To-Do:
 │ Add JS for refreshing the panel
-└ `Currently it just refreshes on a page load, ctrl+f5, etc.`
+└ Currently it just refreshes on a page load, ctrl+f5, etc.
+```
 
 
 Feel free to provide feedback, but I am unlikely to actively maintain unless there is a bug that is urgent to patch.
