@@ -7,14 +7,15 @@ Bypass overrides are saved per workflow and persist across reloads and sessions.
 
 ### There is one "bug" in that it will not re-enable a Group or Subgraph that was manually already bypassed, so that it does not accidently flip all of the nodes within it.
 
-Features:
+### Features:
 - JavaScript-based UI integration
 - Per-workflow bypass state persistence
 - Server-side JSON storage with atomic writes
 - Automatic backup of corrupted database files
 - No additional Python node files or dependencies required
 
-```To-Do:
+### To-Do:
+```
 │ Add JS for refreshing the panel
 └ Currently it just refreshes on a page load, ctrl+f5, etc.
 ```
