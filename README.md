@@ -21,7 +21,9 @@ Just make the Group or Subgraph normal first and the panel will function.
 ### To-Do:
 ```
 │ Add JS for refreshing the panel
-└ Currently it just refreshes on a page load, ctrl+f5, etc.
+└── Currently it just refreshes on a page load, ctrl+f5, etc.
+│ Make it functional for the Desktop App
+└── Currently I do not have the Desktop version so... I will attempt to do so eventually.
 ```
 
 
