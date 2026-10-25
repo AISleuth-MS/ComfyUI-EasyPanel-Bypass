@@ -1,7 +1,7 @@
 ## ◄ ComfyUI Bypass Panel ►
 ## (For Comfy Portable)
 
-A lightweight ComfyUI extension that adds a JavaScript-based panel for managing node bypass states directly in the workflow UI.
+A lightweight ComfyUI extension that adds a JavaScript-based panel for managing Subgraph and Group bypass states directly in the workflow UI.
 
 Bypass overrides are saved per workflow and persist across reloads and sessions. State is stored in ►`ComfyUI/user/bypass_panel/bypass_db.json`◄, keeping settings separate from the extension so updates and reinstalls won't erase them.
 
