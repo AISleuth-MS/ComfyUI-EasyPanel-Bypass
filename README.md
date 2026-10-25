@@ -8,8 +8,7 @@ Bypass overrides are saved per workflow and persist across reloads and sessions.
 ### 🟢 How To Use
 Download this repo, extract the zip and drop it into your ComfyUI Portable folder.
 Such as in my case: 
-►``ComfyUI_windows_portable\ComfyUI\custom_nodes◄
-  └──📂ComfyUI-Portable-EasyPanel-Bypass``
+►`ComfyUI_windows_portable\ComfyUI\custom_nodes\📂ComfyUI-Portable-EasyPanel-Bypass`◄
 
 ### ⚠️ Known "Bugs"
 ```
