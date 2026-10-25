@@ -12,15 +12,15 @@ Just make the Group or Subgraph normal first and the panel will function.
 ```
 ### Features:
 
-► JavaScript-based UI integration
+┤► JavaScript-based UI integration
 
-► Per-workflow bypass state persistence
+┤► Per-workflow bypass state persistence
 
-► Server-side JSON storage with atomic writes
+┤► Server-side JSON storage with atomic writes
 
-► Automatic backup of corrupted database files
+┤► Automatic backup of corrupted database files
 
-► No additional Python node files or dependencies required
+┤► No additional Python node files or dependencies required
 
 ### To-Do:
 ```
