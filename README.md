@@ -1,5 +1,6 @@
 ## ◄ ComfyUI Bypass Panel ►
 ## (For Comfy Portable)
+### Version 0.0.1
 
 A lightweight ComfyUI extension that adds a JavaScript-based panel for managing Subgraph and Group bypass states directly in the workflow UI.
 
