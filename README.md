@@ -16,7 +16,7 @@ Just make the Group or Subgraph normal first and the panel will function.
 
 ┤► Per-workflow bypass state persistence
 
-┤► Server-side JSON storage with atomic writes
+┤► Local JSON DB storage
 
 ┤► Automatic backup of corrupted database files
 
