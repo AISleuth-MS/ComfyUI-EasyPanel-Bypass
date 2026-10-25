@@ -23,10 +23,11 @@ Just make the Group or Subgraph normal first and the panel will function.
 ► No additional Python node files or dependencies required
 
 ### To-Do:
-<span style="color: #FFD700;">│► Add JS for refreshing the panel</span>
+```
+│► Add JS for refreshing the panel
 └── Currently it just refreshes on a page load, ctrl+f5, etc.
-<span style="color: #FFD700;">│► Make it functional for the Desktop App</span>
+│► Make it functional for the Desktop App
 └── Currently I do not have the Desktop version so... I will attempt to do so eventually.
-
+```
 
 Feel free to provide feedback, but I am unlikely to actively maintain unless there is a bug that is urgent to patch.
