@@ -11,10 +11,15 @@ There is one "bug" in that it will not re-enable a Top-level Group or Subgraph t
 Just make the Group or Subgraph normal first and the panel will function.
 ```
 ### Features:
+
 ► JavaScript-based UI integration
+
 ► Per-workflow bypass state persistence
+
 ► Server-side JSON storage with atomic writes
+
 ► Automatic backup of corrupted database files
+
 ► No additional Python node files or dependencies required
 
 ### To-Do:
