@@ -5,7 +5,7 @@ A lightweight ComfyUI extension that adds a JavaScript-based panel for managing 
 
 Bypass overrides are saved per workflow and persist across reloads and sessions. State is stored in `ComfyUI/user/bypass_panel/bypass_db.json`, keeping settings separate from the extension so updates and reinstalls won't erase them.
 
-# ⚠️ Known "Bugs"
+### ⚠️ Known "Bugs"
 ```
 There is one "bug" in that it will not re-enable a Top-level Group or Subgraph that was already manually bypassed, so that it does not accidently flip all of the nodes within it. 
 Just make the Group or Subgraph normal first and the panel will function.
