@@ -6,7 +6,7 @@ A lightweight ComfyUI extension that adds a JavaScript-based panel for managing 
 Bypass overrides are saved per workflow and persist across reloads and sessions. State is stored in ►`ComfyUI/user/bypass_panel/bypass_db.json`◄, keeping settings separate from the extension so updates and reinstalls won't erase them.
 
 ### 🟢 How To Use
-Download this repo, extract the zip and drop it into your ComfyUI Portable folder.
+Download this repo, extract the zip and drop it into your ComfyUI Portable custom_nodes folder.
 Such as in my case:
 
 ►`📂 ComfyUI_windows_portable\ComfyUI\custom_nodes\ComfyUI-Portable-EasyPanel-Bypass`◄
