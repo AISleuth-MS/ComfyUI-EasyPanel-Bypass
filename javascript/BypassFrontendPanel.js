@@ -402,7 +402,7 @@ function createPanel() {
     const style = document.createElement("style");
     style.textContent = `
         #bp-panel {
-            position: fixed; left: 6vw; top: 25vh; z-index: 10000;
+            position: fixed; left: clamp(60px, 4vw, 160px); top: clamp(150px, 21.75vh, 300px); z-index: 10000;
             width: 250px; max-height: 70vh; display: flex; flex-direction: column;
             color: var(--fg-color, #ddd); background: var(--comfy-menu-bg, #202226);
             border: 1px solid #44474d; border-radius: 8px;
@@ -448,7 +448,7 @@ function createPanel() {
             font-size: 16px; padding: 0 2px;
         }
         #bp-tab {
-            position: fixed; left: 6vw; top: 19vh; z-index: 10001;
+            position: fixed; left: clamp(60px, 4vw, 160px); top: clamp(120px, 19vh, 200px); z-index: 10001;
             border: 1px solid #44474d; border-radius: 5px;
             padding: 6px 9px; background: #202226; color: #ddd; cursor: pointer;
         }
