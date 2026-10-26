@@ -18,6 +18,12 @@ let dbOnline = true;
 let orphanCount = 0;
 let loadToken = 0;
 
+// For updating loadJournal -> renderPanel on workflow edited, instead of requiring a reload.
+let panelOpen = false;
+let updatePanelDisplay = () => {};
+let lastGroupSignature = "";
+const observedGraphs = new WeakSet();
+
 // Stability, Keys, Ids, etc.
 
 function rootGraph() {
@@ -379,10 +385,35 @@ function renderItems(items, parent, depth = 0) {
     }
 }
 
+function observeGraphRefresh(graph, visited = new Set()) {
+    if (!graph || visited.has(graph)) return;
+    visited.add(graph);
+
+    if (!observedGraphs.has(graph) && typeof graph.setDirtyCanvas === "function") {
+        const original = graph.setDirtyCanvas;
+        graph.setDirtyCanvas = function(...args) {
+            const result = original.apply(this, args);
+            if (panelOpen) requestAnimationFrame(checkGroupChanges);
+            return result;
+        };
+        observedGraphs.add(graph);
+    }
+
+    for (const node of graphNodes(graph)) {
+        if (node?.subgraph) observeGraphRefresh(node.subgraph, visited);
+    }
+}
+
 function renderPanel() {
-    if (!list || !rootGraph()) return;
+    const graph = rootGraph();
+    if (!list || !graph) return;
+	
+	observeGraphRefresh(graph);
+	
+    lastGroupSignature = JSON.stringify(getGroupSignature(graph));
+
     list.replaceChildren();
-    const tree = buildHierarchy(rootGraph());
+    const tree = buildHierarchy(graph);
     renderItems(tree, list);
 
     const ids = new Set();
@@ -392,6 +423,7 @@ function renderPanel() {
             walk(item.children);
         }
     })(tree);
+
     orphanCount = [...overrides.keys()].filter(key => !ids.has(key)).length;
     updateStatus();
 }
@@ -460,9 +492,10 @@ function createPanel() {
     tab.type = "button";
     tab.textContent = "⇆ Bypass";
     tab.addEventListener("click", () => {
-        panel.hidden = !panel.hidden;
-        if (!panel.hidden) renderPanel();
-    });
+		panelOpen = !panelOpen;
+		if (panelOpen) renderPanel();
+		updatePanelDisplay();
+	});
 
     panel = document.createElement("section");
     panel.id = "bp-panel";
@@ -486,7 +519,10 @@ function createPanel() {
     close.id = "bp-close";
     close.type = "button";
     close.textContent = "×";
-    close.addEventListener("click", () => { panel.hidden = true; });
+    close.addEventListener("click", () => {
+		panelOpen = false;
+		updatePanelDisplay();
+	});
 
     header.append(title, restore, close);
 
@@ -499,15 +535,136 @@ function createPanel() {
     updateStatus();
 }
 
+function getGroupSignature(graph, visited = new Set()) {
+    if (!graph || visited.has(graph)) return [];
+    visited.add(graph);
+
+    const signature = graphGroups(graph).map(group => [
+        group.id,
+        group.title,
+        group.pos?.[0],
+        group.pos?.[1],
+        group.size?.[0],
+        group.size?.[1]
+    ]);
+
+    for (const node of graphNodes(graph)) {
+        if (node?.subgraph) {
+            signature.push(...getGroupSignature(node.subgraph, visited));
+        }
+    }
+
+    return signature;
+}
+
+function checkGroupChanges() {
+    const graph = rootGraph();
+    if (!graph) return;
+
+    const signature = JSON.stringify(getGroupSignature(graph));
+
+    if (signature === lastGroupSignature) return;
+
+    lastGroupSignature = signature;
+    renderPanel();
+}
+
+// This is objectively better and does not require reloading.
+// However, I have not perfected it at this time.
+// The panel still requires interacting with to update its text display.
+// Otherwise, reloading to update the panel is no longer a limiting factor.
+
+function observeWorkflowTabs() {
+    const selector = '[data-testid="topbar-workflow-tabs"]';
+    let previousState = null;
+    let scheduled = false;
+
+    const refresh = () => {
+        scheduled = false;
+        renderPanel();
+    };
+
+    const observer = new MutationObserver(() => {
+        const button = document.querySelector(`${selector} [data-testid="close-workflow-button"]`);
+        if (!button) return;
+
+        const state = button.classList.contains("invisible");
+
+        if (previousState === null) {
+            previousState = state;
+            return;
+        }
+
+        if (state === previousState) return;
+        previousState = state;
+
+        if (scheduled) return;
+        scheduled = true;
+        requestAnimationFrame(refresh);
+    });
+
+    const attach = () => {
+        const tabs = document.querySelector(selector);
+        if (!tabs) return false;
+
+        observer.observe(tabs, {
+            subtree: true,
+            attributes: true,
+            attributeFilter: ["class"]
+        });
+
+        return true;
+    };
+
+    if (!attach()) {
+        const finder = new MutationObserver(() => {
+            if (attach()) finder.disconnect();
+        });
+
+        finder.observe(document.documentElement, { childList: true, subtree: true });
+    }
+}
+
 app.registerExtension({
     name: EXTENSION_ID,
     async setup() {
         createPanel();
         renderPanel();
-    },
-    // Fires on page load, Ctrl+F5, and every workflow tab switch.
-    async afterConfigureGraph() {
-        await loadJournal();
-        renderPanel();
+		observeWorkflowTabs();
+		
+		// Hide panel when sidebar is open OR when it is hidden (Settings opens up, etc)
+		updatePanelDisplay = () => {
+			const sidebar = document.querySelector(".side-toolbar-container");
+			const target = document.getElementById('bp-tab');
+			const targetTwo = document.getElementById('bp-panel');
+            if (!sidebar || !target || !targetTwo) return;
+
+            const group = document.querySelector('[data-panel-group][data-panel-group-id="reka-splitter-group-v-19"]');
+
+            const sidebarHidden = sidebar.getAttribute("data-aria-hidden") === "true" || sidebar.getAttribute("aria-hidden") === "true";
+
+            const hasOpenPanel = group && [...group.children].some(panel => {
+                if (!panel.matches("[data-panel]") || panel.id === "main-panel") return false;
+
+                const style = getComputedStyle(panel);
+                const size = parseFloat(panel.dataset.panelSize || "0");
+
+                return size > 0 && style.display !== "none" && style.visibility !== "hidden" && panel.getClientRects().length > 0;
+            });
+
+            target.hidden = sidebarHidden || !!hasOpenPanel;
+			targetTwo.hidden = !panelOpen || sidebarHidden || !!hasOpenPanel;
+        };
+
+        const observer = new MutationObserver(updatePanelDisplay);
+
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true,
+            attributes: true,
+            attributeFilter: ["style", "class", "data-panel-size", "data-aria-hidden", "aria-hidden"]
+        });
+
+        updatePanelDisplay();
     }
 });
