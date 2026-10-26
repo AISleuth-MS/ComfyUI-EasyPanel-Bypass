@@ -30,9 +30,6 @@ Just make the Group or Subgraph normal first and the panel will function.
 
 ### To-Do (Priority Listing):
 ```
-│► Add JS for refreshing the panel
-└──┤► Currently the panel itself just refreshes on a page load, ctrl+f5, etc. In the event of a node name change, a reload is required at this time.
-│
 │► Add indicator that a Subgraph or Group was manually bypassed
 └──┤► Currently no indicator at this time. The panel cannot safely interact with it due to its intended use of node state flipping.
 │
